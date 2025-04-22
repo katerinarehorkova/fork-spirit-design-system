@@ -9,7 +9,7 @@
   {
     "key": "searchFont1",
     "type": "string",
-    "default": "'Inter'",
+    "default": "",
     "title": "Search",
     "description": "Specify the font name to search for in the fontFamily attribute. For example, 'sans-serif'.",
     "category": "1. Replace font"
@@ -17,7 +17,7 @@
   {
     "key": "replaceFont1",
     "type": "string",
-    "default": "\"Inter-test\"",
+    "default": "",
     "title": "Replace",
     "description": "Specify the font name that will replace the searched font in the fontFamily attribute.",
     "category": "1. Replace font"

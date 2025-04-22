@@ -1,6 +1,6 @@
 {
-  "id": "alma.career.spirit-tokens-exporter",
-  "name": "Spirit Tokens Exporter",
+  "id": "alma.career.spirit-tokens-exporter-v2",
+  "name": "Spirit Tokens Exporter V2",
   "description": "Spirit Tokens Exporter allows you to export a tokens from Supernova",
   "author": "Spirit Design System Team <team_design_system@almacareer.com>",
   "organization": "Alma Career",
