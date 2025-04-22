@@ -11,7 +11,7 @@ import { generateOutputFilesByThemes } from './generators/fileGenerator';
 import { safeStringify } from './helpers/safeStringify';
 
 /** Exporter configuration from the resolved default configuration and user overrides */
-export const exportConfiguration = Pulsar.exportConfig<ExporterConfiguration>();
+export const exportConfiguration: ExporterConfiguration = Pulsar.exportConfig<ExporterConfiguration>();
 
 // https://github.com/Supernova-Studio/exporters/issues/4
 // @ts-ignore-next-line

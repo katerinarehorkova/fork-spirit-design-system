@@ -188,28 +188,10 @@ const passObjectKeyValueToCallback = <Shape>(object: Shape, callback: KeyValueTe
  */
 const replaceFontName = (fontFamily: string): string => {
   // Data defined in exporter pipeline
-  const replacements = [
-    {
-      search: exportConfiguration.searchFont1,
-      replace: exportConfiguration.replaceFont1,
-    },
-    {
-      search: exportConfiguration.searchFont2,
-      replace: exportConfiguration.replaceFont2,
-    },
-    {
-      search: exportConfiguration.searchFont3,
-      replace: exportConfiguration.replaceFont3,
-    },
-    {
-      search: exportConfiguration.searchFont4,
-      replace: exportConfiguration.replaceFont4,
-    },
-    {
-      search: exportConfiguration.searchFont5,
-      replace: exportConfiguration.replaceFont5,
-    },
-  ];
+  const replacements: Array<{ search: string; replace: string }> = [...Array(5)].map((_, i) => ({
+    search: exportConfiguration?.[`searchFont${i + 1}`] || '',
+    replace: exportConfiguration?.[`replaceFont${i + 1}`] || '',
+  }));
 
   let fontName = `'${fontFamily}', ${TYPOGRAPHY_SUBSTITUTE_FONT}`;
 
