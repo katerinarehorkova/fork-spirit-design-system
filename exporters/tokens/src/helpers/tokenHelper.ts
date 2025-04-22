@@ -11,7 +11,7 @@ import {
   TypographyTokenValue,
 } from '@supernovaio/sdk-exporters';
 import { TYPOGRAPHY_SUBSTITUTE_FONT } from '../constants';
-import { exportConfiguration } from '..'; // Import the configuration
+import { exportConfiguration } from '..';
 import { toCamelCase } from './stringHelper';
 
 export const tokenVariableName = (token: Token, tokenGroups: Array<TokenGroup>, hasParentPrefix: boolean): string => {
@@ -215,7 +215,7 @@ const replaceFontName = (fontFamily: string): string => {
 
   for (const { search, replace } of replacements) {
     if (search && replace) {
-      fontName = fontName.replace(new RegExp(search.trim(), 'g'), replace.trim());
+      fontName = fontName.replace(new RegExp(search.trim(), 'g'), replace.trim().replace(/"/g, ''));
     }
   }
 
@@ -226,7 +226,7 @@ export const typographyValue = (
   { fontFamily, fontSize, fontWeight, lineHeight }: TypographyTokenValue,
   isItalic: boolean,
   hasJsOutput: boolean,
-) => {
+): string => {
   const fontName = replaceFontName(fontFamily.text);
 
   const typographyObject: TypographyShape = {
