@@ -1,5 +1,5 @@
-import { exampleConfigurationDefault } from './tests/fixtures/exampleConfiguration';
+import { sampleConfigurationDefault } from './tests/fixtures/sampleConfiguration';
 
 jest.mock('../../index', () => ({
-  exportConfiguration: exampleConfigurationDefault,
+  exportConfiguration: sampleConfigurationDefault,
 }));

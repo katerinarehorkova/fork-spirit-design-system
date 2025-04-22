@@ -41,4 +41,7 @@ export type ExporterConfiguration = {
 
   /* Replace font 5 */
   replaceFont5: string;
+
+  /* For dynamic generation of array in replaceFontName() */
+  [key: `searchFont${number}` | `replaceFont${number}`]: string;
 };

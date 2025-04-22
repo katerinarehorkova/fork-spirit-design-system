@@ -1,5 +1,5 @@
 import { TypographyToken } from '@supernovaio/sdk-exporters';
-import { exampleConfiguration } from '../../../tests/fixtures/exampleConfiguration';
+import { sampleConfiguration } from '../../../tests/fixtures/sampleConfiguration';
 import {
   exampleTypographyTokens,
   expectedTypographyWithFontReplacement,
@@ -9,7 +9,7 @@ import { typographyValue } from '../tokenHelper';
 
 // Mock the module where exportConfiguration is defined
 jest.mock('../../index', () => ({
-  exportConfiguration: exampleConfiguration,
+  exportConfiguration: sampleConfiguration,
 }));
 
 describe('typographyValue with override config', () => {
