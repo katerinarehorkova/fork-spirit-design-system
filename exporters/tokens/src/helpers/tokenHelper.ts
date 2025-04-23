@@ -245,6 +245,8 @@ const override = (configuration: Record<string, unknown>, value: string, name: s
   return replaceable;
 };
 
+const getExportConfiguration = () => exportConfiguration;
+
 /**
  * Replaces the font family name with a modified version including a substitute font.
  *
@@ -256,7 +258,7 @@ const override = (configuration: Record<string, unknown>, value: string, name: s
  * @returns {string} - The modified font family string with the substitute font included.
  */
 const replaceFontName = (fontFamily: string): string => {
-  return override(exportConfiguration, `'${fontFamily}', ${TYPOGRAPHY_SUBSTITUTE_FONT}`, 'Font');
+  return override(getExportConfiguration(), `'${fontFamily}', ${TYPOGRAPHY_SUBSTITUTE_FONT}`, 'Font');
 };
 
 export const typographyValue = (
