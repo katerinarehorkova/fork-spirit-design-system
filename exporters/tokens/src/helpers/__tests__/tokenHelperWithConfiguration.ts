@@ -4,11 +4,10 @@ import {
   exampleTypographyTokens,
   expectedTypographyWithFontReplacement,
 } from '../../../tests/fixtures/exampleTypographyTokens';
-
 import { typographyValue } from '../tokenHelper';
 
-// Mock the module where exportConfiguration is defined
-jest.mock('../../index', () => ({
+// Mocks the Supernova sample configuration with populated data
+jest.mock('../../../config', () => ({
   exportConfiguration: sampleConfiguration,
 }));
 
