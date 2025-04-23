@@ -10,8 +10,8 @@ import {
   TokenType,
   TypographyTokenValue,
 } from '@supernovaio/sdk-exporters';
+import { exportConfiguration } from '../../config';
 import { TYPOGRAPHY_SUBSTITUTE_FONT } from '../constants';
-import { exportConfiguration } from '..';
 import { toCamelCase } from './stringHelper';
 
 export const tokenVariableName = (token: Token, tokenGroups: Array<TokenGroup>, hasParentPrefix: boolean): string => {
@@ -177,31 +177,86 @@ const passObjectKeyValueToCallback = <Shape>(object: Shape, callback: KeyValueTe
 };
 
 /**
- * Replaces font family names in a given font string with configured replacements.
+ * Prepares a set of search-and-replace key-value pairs based on a configuration object.
  *
- * This function takes a font family string and replaces occurrences of specific font names
- * with their corresponding replacements as defined in the `exportConfiguration` object.
- * If no replacements are found, the original font family string is returned with a fallback font appended.
+ * This function generates an object containing `search` and `replace` keys with their
+ * corresponding values derived from the configuration object. The keys are dynamically
+ * constructed using the provided `name` and `index` parameters.
  *
- * @param {string} fontFamily - The original font family string to process.
- * @returns {string} - The processed font family string with replacements applied.
+ * @param {Record<string, unknown>} configuration - The configuration object containing the key-value pairs.
+ * @param {string} name - The base name used to construct the dynamic keys.
+ * @param {number} index - The index used to construct the dynamic keys.
+ * @returns {Record<string, string>} - An object with `search` and `replace` keys and their corresponding values.
  */
-const replaceFontName = (fontFamily: string): string => {
-  // Data defined in exporter pipeline
-  const replacements: Array<{ search: string; replace: string }> = [...Array(5)].map((_, i) => ({
-    search: exportConfiguration?.[`searchFont${i + 1}`] || '',
-    replace: exportConfiguration?.[`replaceFont${i + 1}`] || '',
-  }));
+const prepareReplacements = (configuration: Record<string, unknown>, name: string, index: number) => {
+  return ['search', 'replace'].reduce(
+    (acc, key) => ({
+      [key]: (configuration?.[`${key}${name}${index}`] as string) || '',
+      ...acc,
+    }),
+    {},
+  );
+};
 
-  let fontName = `'${fontFamily}', ${TYPOGRAPHY_SUBSTITUTE_FONT}`;
+/**
+ * Generates an array of search-and-replace objects based on a configuration object and a name.
+ *
+ * This function creates an array of objects, each containing `search` and `replace` keys,
+ * by calling the `prepareReplacements` function for a fixed number of iterations (5).
+ * The `prepareReplacements` function dynamically constructs the `search` and `replace` values
+ * based on the provided configuration and name.
+ *
+ * @param {Record<string, unknown>} configuration - The configuration object containing key-value pairs.
+ * @param {string} name - The base name used to construct dynamic keys for replacements.
+ * @returns {Array<{ search: string; replace: string }>} - An array of objects with `search` and `replace` keys.
+ */
+const getReplacements = (configuration: Record<string, unknown>, name: string) => {
+  const replacements: Array<{ search: string; replace: string }> = [...Array(5)].map(
+    (_, i) => prepareReplacements(configuration, name, i) as { search: string; replace: string },
+  );
+
+  return replacements;
+};
+
+/**
+ * Replaces occurrences of specific patterns in a string with their corresponding replacements.
+ *
+ * This function takes a configuration object, a string value, and a name. It retrieves
+ * an array of search-and-replace pairs using the `getReplacements` function. Then, it iterates
+ * through the replacements and applies them to the input string using regular expressions.
+ *
+ * @param {Record<string, unknown>} configuration - The configuration object containing replacement rules.
+ * @param {string} value - The input string to be processed.
+ * @param {string} name - The base name used to retrieve replacement rules.
+ * @returns {string} - The processed string with replacements applied.
+ */
+const override = (configuration: Record<string, unknown>, value: string, name: string): string => {
+  // Data defined in exporter pipeline
+  const replacements: Array<{ search: string; replace: string }> = getReplacements(configuration, name);
+
+  let replaceable = value;
 
   for (const { search, replace } of replacements) {
     if (search && replace) {
-      fontName = fontName.replace(new RegExp(search.trim(), 'g'), replace.trim().replace(/"/g, ''));
+      replaceable = replaceable.replace(new RegExp(search.trim(), 'g'), replace.trim().replace(/"/g, ''));
     }
   }
 
-  return fontName;
+  return replaceable;
+};
+
+/**
+ * Replaces the font family name with a modified version including a substitute font.
+ *
+ * This function takes a font family name as input and uses the `override` function
+ * to replace it with a string that includes the original font family and a substitute font.
+ * The replacement rules are defined in the `exportConfiguration` object.
+ *
+ * @param {string} fontFamily - The name of the font family to be replaced.
+ * @returns {string} - The modified font family string with the substitute font included.
+ */
+const replaceFontName = (fontFamily: string): string => {
+  return override(exportConfiguration, `'${fontFamily}', ${TYPOGRAPHY_SUBSTITUTE_FONT}`, 'Font');
 };
 
 export const typographyValue = (
